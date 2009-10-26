@@ -79,8 +79,61 @@ CustomDetectorConstruction::~CustomDetectorConstruction()
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
- 
+
 G4VPhysicalVolume* CustomDetectorConstruction::Construct()
+{
+    //Lead
+    G4Material* Pb = 
+    new G4Material("Lead", z=82., a= 207.19*g/mole, density= 11.35*g/cm3);
+    //Air
+    G4Element* N = new G4Element("Nitrogen", "N", z=7., a= 14.01*g/mole);
+    G4Element* O = new G4Element("Oxygen"  , "O", z=8., a= 16.00*g/mole);
+
+    G4Material* Air = new G4Material("Air", density= 1.29*mg/cm3, nel=2);
+    Air->AddElement(N, 70*perCent);
+    Air->AddElement(O, 30*perCent);
+    // Print all the materials defined.
+    //
+    G4cout << G4endl << "The materials defined are : " << G4endl << G4endl;
+    G4cout << *(G4Material::GetMaterialTable()) << G4endl;
+
+
+    // Define the world
+    G4Box* experiment_Box = new G4Box ("experiment_Box", 30*cm, 30*cm, 30*cm);
+    G4LogicalVolume* experiment_Log = new G4LogicalVolume(experiment_Box, Air, "experiment_Log");
+    G4VPhysicalVolume* experiment_Phys = new G4PVPlacement(0,
+            G4ThreeVector(0, 0, 0), experiment_Log, "experiment_Physical", 0,
+            false, // no boolean operations
+            0); // copy number
+
+
+    G4Box detector_Box = new G4Box ("detector_Box", 3*cm, 3*cm, 3*cm);
+    G4LogicalVolume *detector_Log = new G4LogicalVolume(experiment_Box, Pb, "detector_Log");
+
+    // Make an array of 4 detectors
+    G4VPhysicalVolume* detector_Phys[4];
+    detectorPhys[0] = new G4PVPlacement(0,
+            G4ThreeVector(3.5*cm, 3.5*cm, 0), // Placed at the appropriate location
+            detector_Log, // 3cm cube
+            "detector_Phys_0", // Name
+            experiment_Log, // The mother volume.
+            false, // no boolean operations
+            0); // Copy number
+
+
+
+    // Set the viusalization colors for all the wireframes!
+    G4VisAttributes* experiment_VisAtt = new G4VisAttributes(G4Colour(1.0,0.2,0.6));
+    experiment_Log->SetVisAttributes(experiment_VisAtt);
+
+    G4VisAttributes* detector_VisAtt = new G4VisAttributes(G4Colour(1.0,1.0,0.0));
+    detector_Log->SetVisAttributes(detector_VisAtt);
+
+    return experiment_Phys;
+}
+
+
+/*G4VPhysicalVolume* CustomDetectorConstruction::Construct()
 {
 //--------- Material definition ---------
 
@@ -265,7 +318,7 @@ G4VPhysicalVolume* CustomDetectorConstruction::Construct()
   //                                               minEkin));
   
   return physiWorld;
-}
+}*/
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
  
