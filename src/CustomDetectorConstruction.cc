@@ -82,6 +82,10 @@ CustomDetectorConstruction::~CustomDetectorConstruction()
 
 G4VPhysicalVolume* CustomDetectorConstruction::Construct()
 {
+    G4double a, z;
+    G4double density, temperature, pressure;
+    G4int nel;
+
     //Lead
     G4Material* Pb = 
     new G4Material("Lead", z=82., a= 207.19*g/mole, density= 11.35*g/cm3);
@@ -119,8 +123,6 @@ G4VPhysicalVolume* CustomDetectorConstruction::Construct()
             experiment_Log, // The mother volume.
             false, // no boolean operations
             0); // Copy number
-
-
 
     // Set the viusalization colors for all the wireframes!
     G4VisAttributes* experiment_VisAtt = new G4VisAttributes(G4Colour(1.0,0.2,0.6));
