@@ -103,7 +103,7 @@ G4VPhysicalVolume* CustomDetectorConstruction::Construct()
 
 
     // Define the world
-    G4Box* experiment_Box = new G4Box ("experiment_Box", 30*cm, 30*cm, 30*cm);
+    G4Box* experiment_Box = new G4Box ("experiment_Box", 30.0*cm, 30.0*cm, 30.0*cm);
     G4LogicalVolume* experiment_Log = new G4LogicalVolume(experiment_Box, Air, "experiment_Log");
     G4VPhysicalVolume* experiment_Phys = new G4PVPlacement(0,
             G4ThreeVector(0, 0, 0), experiment_Log, "experiment_Physical", 0,
@@ -111,15 +111,43 @@ G4VPhysicalVolume* CustomDetectorConstruction::Construct()
             0); // copy number
 
 
-    G4Box detector_Box = new G4Box ("detector_Box", 3*cm, 3*cm, 3*cm);
-    G4LogicalVolume *detector_Log = new G4LogicalVolume(experiment_Box, Pb, "detector_Log");
+    G4Box* detector_Box = new G4Box ("detector_Box", 3.0*cm, 3.0*cm, 3.0*cm);
+    G4LogicalVolume *detector_Log = new G4LogicalVolume(detector_Box, Pb, "detector_Log");
 
     // Make an array of 4 detectors
     G4VPhysicalVolume* detector_Phys[4];
-    detectorPhys[0] = new G4PVPlacement(0,
+    detector_Phys[0] = new G4PVPlacement(0,
             G4ThreeVector(3.5*cm, 3.5*cm, 0), // Placed at the appropriate location
             detector_Log, // 3cm cube
             "detector_Phys_0", // Name
+            experiment_Log, // The mother volume.
+            false, // no boolean operations
+            0); // Copy number
+    detector_Phys[0] = new G4PVPlacement(0,
+            G4ThreeVector(3.5*cm, 3.5*cm, 0), // Placed at the appropriate location
+            detector_Log, // 3cm cube
+            "detector_Phys_0", // Name
+            experiment_Log, // The mother volume.
+            false, // no boolean operations
+            0); // Copy number
+    detector_Phys[1] = new G4PVPlacement(0,
+            G4ThreeVector(-3.5*cm, 3.5*cm, 0), // Placed at the appropriate location
+            detector_Log, // 3cm cube
+            "detector_Phys_1", // Name
+            experiment_Log, // The mother volume.
+            false, // no boolean operations
+            0); // Copy number
+    detector_Phys[2] = new G4PVPlacement(0,
+            G4ThreeVector(-3.5*cm, -3.5*cm, 0), // Placed at the appropriate location
+            detector_Log, // 3cm cube
+            "detector_Phys_2", // Name
+            experiment_Log, // The mother volume.
+            false, // no boolean operations
+            0); // Copy number
+    detector_Phys[3] = new G4PVPlacement(0,
+            G4ThreeVector(3.5*cm, -3.5*cm, 0), // Placed at the appropriate location
+            detector_Log, // 3cm cube
+            "detector_Phys_3", // Name
             experiment_Log, // The mother volume.
             false, // no boolean operations
             0); // Copy number
