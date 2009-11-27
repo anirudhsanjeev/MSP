@@ -101,7 +101,7 @@ void CustomPhysicsList::ConstructProcess()
   AddTransportation();
   ConstructEM();
   ConstructGeneral();
-  AddStepMax();
+  //AddStepMax();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -216,7 +216,7 @@ void CustomPhysicsList::ConstructGeneral()
 #include "G4StepLimiter.hh"
 #include "G4UserSpecialCuts.hh"
 
-void CustomPhysicsList::AddStepMax()
+/*void CustomPhysicsList::AddStepMax()
 {
   // Step limitation seen as a process
   G4StepLimiter* stepLimiter = new G4StepLimiter();
@@ -233,18 +233,73 @@ void CustomPhysicsList::AddStepMax()
 	  ////pmanager ->AddDiscreteProcess(userCuts);
         }
   }
-}
+}*/
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void CustomPhysicsList::SetCuts()
 {
-  //G4VUserPhysicsList::SetCutsWithDefault method sets 
-  //the default cut value for all particle types 
-  //
-  SetCutsWithDefault();
-     
-  if (verboseLevel>0) DumpCutValuesTable();
+	  // reactualise cutValues
+	  if (currentDefaultCut != defaultCutValue)
+	    {
+	     if(cutForGamma    == currentDefaultCut) cutForGamma    = defaultCutValue;
+	     if(cutForElectron == currentDefaultCut) cutForElectron = defaultCutValue;
+	     if(cutForProton   == currentDefaultCut) cutForProton   = defaultCutValue;
+	     currentDefaultCut = defaultCutValue;
+	    }
+
+	  if (verboseLevel >0){
+	    G4cout << "CustomPhysicsList::SetCuts:";
+	    G4cout << "CutLength : " << G4BestUnit(defaultCutValue,"Length") << G4endl;
+	  }
+
+	  // set cut values for gamma at first and for e- second and next for e+,
+	  // because some processes for e+/e- need cut values for gamma
+	  SetCutValue(cutForGamma, "gamma");
+	  SetCutValue(cutForElectron, "e-");
+	  SetCutValue(cutForElectron, "e+");
+
+	  // set cut values for proton and anti_proton before all other hadrons
+	  // because some processes for hadrons need cut values for proton/anti_proton
+	  SetCutValue(cutForProton, "proton");
+	  SetCutValue(cutForProton, "anti_proton");
+
+	  SetCutValueForOthers(defaultCutValue);
+
+	  if (verboseLevel>0) DumpCutValuesTable();
+}
+
+void CustomPhysicsList::SetCutForGamma(G4double cut)
+{
+  ResetCuts();
+  cutForGamma = cut;
+}
+
+void CustomPhysicsList::SetCutForElectron(G4double cut)
+{
+  ResetCuts();
+  cutForElectron = cut;
+}
+
+void CustomPhysicsList::SetCutForProton(G4double cut)
+{
+  ResetCuts();
+  cutForProton = cut;
+}
+
+G4double CustomPhysicsList::GetCutForGamma() const
+{
+  return cutForGamma;
+}
+
+G4double CustomPhysicsList::GetCutForElectron() const
+{
+  return cutForElectron;
+}
+
+G4double CustomPhysicsList::GetCutForProton() const
+{
+  return cutForGamma;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

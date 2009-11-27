@@ -6,16 +6,19 @@
 class G4Event;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+class CustomAnalysisManager;
 
 class CustomEventAction : public G4UserEventAction
 {
   public:
-    CustomEventAction();
+    CustomEventAction(CustomAnalysisManager* = 0);
    ~CustomEventAction();
 
   public:
     void BeginOfEventAction(const G4Event*);
     void EndOfEventAction(const G4Event*);
+  private:
+    CustomAnalysisManager* fAnalysisManager;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

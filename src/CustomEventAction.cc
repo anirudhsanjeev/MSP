@@ -8,8 +8,10 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
  
-CustomEventAction::CustomEventAction()
-{}
+CustomEventAction::CustomEventAction(CustomAnalysisManager* aAnalysisManager) : fAnalysisManager(aAnalysisManager)
+{
+
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
  
@@ -19,26 +21,35 @@ CustomEventAction::~CustomEventAction()
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
  
 void CustomEventAction::BeginOfEventAction(const G4Event*)
-{}
+{
+#ifdef G4ANALYSIS_USE
+	if(fAnalysisManager) fAnalysisManager->BeginOfEvent(aEvent);
+#endif
+
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
  
 void CustomEventAction::EndOfEventAction(const G4Event* evt)
 {
+
+#ifdef G4ANALYSIS_USE
+  if(fAnalysisManager) fAnalysisManager->EndOfEvent(aEvent);
+#endif
   G4int event_id = evt->GetEventID();
   
   // get number of stored trajectories
   //
-  G4TrajectoryContainer* trajectoryContainer = evt->GetTrajectoryContainer();
+  /*G4TrajectoryContainer* trajectoryContainer = evt->GetTrajectoryContainer();
   G4int n_trajectories = 0;
-  if (trajectoryContainer) n_trajectories = trajectoryContainer->entries();
+  if (trajectoryContainer) n_trajectories = trajectoryContainer->entries();*/
   
   // periodic printing
   //
   if (event_id < 100 || event_id%100 == 0) {
     G4cout << ">>> Event " << evt->GetEventID() << G4endl;
-    G4cout << "    " << n_trajectories 
-	   << " trajectories stored in this event." << G4endl;
+    //G4cout << "    " << n_trajectories
+	//   << " trajectories stored in this event." << G4endl;
   }
 }
 
