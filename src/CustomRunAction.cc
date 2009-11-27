@@ -1,30 +1,23 @@
+#ifdef G4ANALYSIS_USE
+#include "CustomAnalysisManager.hh"
+#endif
+
 #include "CustomRunAction.hh"
 
-#include "G4Run.hh"
+CustomRunAction::CustomRunAction(
+ CustomAnalysisManager* aAnalysisManager
+):fAnalysisManager(aAnalysisManager){}
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+CustomRunAction::~CustomRunAction(){}
 
-CustomRunAction::CustomRunAction()
-{}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-CustomRunAction::~CustomRunAction()
-{}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-void CustomRunAction::BeginOfRunAction(const G4Run* aRun)
-{
-  G4cout << "### Run " << aRun->GetRunID() << " start." << G4endl;
+void CustomRunAction::BeginOfRunAction(const G4Run* aRun) {
+#ifdef G4ANALYSIS_USE
+  if(fAnalysisManager) fAnalysisManager->BeginOfRun(aRun);
+#endif
 }
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-void CustomRunAction::EndOfRunAction(const G4Run*)
-{ }
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-
-
+void CustomRunAction::EndOfRunAction(const G4Run* aRun){
+#ifdef G4ANALYSIS_USE
+  if(fAnalysisManager) fAnalysisManager->EndOfRun(aRun);
+#endif
+}
