@@ -1,35 +1,3 @@
-//
-// ********************************************************************
-// * License and Disclaimer                                           *
-// *                                                                  *
-// * The  Geant4 software  is  copyright of the Copyright Holders  of *
-// * the Geant4 Collaboration.  It is provided  under  the terms  and *
-// * conditions of the Geant4 Software License,  included in the file *
-// * LICENSE and available at  http://cern.ch/geant4/license .  These *
-// * include a list of copyright holders.                             *
-// *                                                                  *
-// * Neither the authors of this software system, nor their employing *
-// * institutes,nor the agencies providing financial support for this *
-// * work  make  any representation or  warranty, express or implied, *
-// * regarding  this  software system or assume any liability for its *
-// * use.  Please see the license in the file  LICENSE  and URL above *
-// * for the full disclaimer and the limitation of liability.         *
-// *                                                                  *
-// * This  code  implementation is the result of  the  scientific and *
-// * technical work of the GEANT4 collaboration.                      *
-// * By using,  copying,  modifying or  distributing the software (or *
-// * any work based  on the software)  you  agree  to acknowledge its *
-// * use  in  resulting  scientific  publications,  and indicate your *
-// * acceptance of all terms of the Geant4 Software license.          *
-// ********************************************************************
-//
-//
-// $Id: CustomDetectorConstruction.hh,v 1.10 2008/09/22 16:41:20 maire Exp $
-// GEANT4 tag $Name: geant4-09-02 $
-//
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
 #ifndef CustomDetectorConstruction_h
 #define CustomDetectorConstruction_h 1
 
@@ -44,6 +12,8 @@ class G4Material;
 class G4VPVParameterisation;
 class G4UserLimits;
 class CustomDetectorMessenger;
+class CustomCalorimeterDetector;
+
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -67,7 +37,8 @@ class CustomDetectorConstruction : public G4VUserDetectorConstruction
      void setTargetMaterial (G4String);
      void setChamberMaterial(G4String);
      void SetMagField(G4double);
-     void SetMaxStep (G4double);     
+     void SetMaxStep (G4double);
+     void PrintCalorimeters();
      
   private:
 
@@ -96,6 +67,8 @@ class CustomDetectorConstruction : public G4VUserDetectorConstruction
      CustomMagneticField* fpMagField;   // pointer to the magnetic field 
      
      CustomDetectorMessenger* detectorMessenger;  // pointer to the Messenger
+
+     CustomCalorimeterDetector *calorimeterSD;
        
      G4double fWorldLength;            // Full length of the world volume
      G4double fTargetLength;           // Full length of Target

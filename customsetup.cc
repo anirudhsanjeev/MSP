@@ -5,14 +5,20 @@
 #include "CustomEventAction.hh"
 #include "CustomSteppingAction.hh"
 #include "CustomSteppingVerbose.hh"
+#include "CustomAnalysisManager.hh"
+
+// AIDA :
+#ifdef G4ANALYSIS_USE
+#include <AIDA/IAnalysisFactory.h>
+#endif
 
 #include "G4RunManager.hh"
 #include "G4UImanager.hh"
-#include "G4UIterminal.hh"
-#include "G4UItcsh.hh"
 
 #ifdef G4VIS_USE
 #include "G4VisExecutive.hh"
+#include "G4UIterminal.hh"
+#include "G4UItcsh.hh"
 #endif
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -50,18 +56,28 @@ int main(int argc,char** argv)
   G4UserSteppingAction* stepping_action = new CustomSteppingAction;
   runManager->SetUserAction(stepping_action);
 
+
+
+#ifdef G4ANALYSIS_USE
+  CustomAnalysisManager * analysisManager = 0;
+  AIDA::IAnalysisFactory* aida = AIDA_createAnalysisFactory();
+  analysisManager = new CustomAnalysisManager(aida);
+#endif
+
+
   // Initialize G4 kernel
   //
   runManager->Initialize();
       
   // Get the pointer to the User Interface manager
   //
-  G4UImanager * UI = G4UImanager::GetUIpointer();  
+  G4UImanager * UI = G4UImanager::GetUIpointer();
 
   if (argc!=1)   // batch mode  
     {
      G4String command = "/control/execute ";
      G4String fileName = argv[1];
+
      UI->ApplyCommand(command+fileName);
     }
     
@@ -70,19 +86,19 @@ int main(int argc,char** argv)
 #ifdef G4VIS_USE
       G4VisManager* visManager = new G4VisExecutive;
       visManager->Initialize();
+      G4UIsession * session = 0;
 #endif    
      
-      G4UIsession * session = 0;
+
 #ifdef G4UI_USE_TCSH
-      session = new G4UIterminal(new G4UItcsh);      
-#else
+      //session = new G4UIterminal(new G4UItcsh);
       session = new G4UIterminal();
 #endif
 #ifdef G4VIS_USE
-      UI->ApplyCommand("/control/execute vis.mac");     
-#endif
+      UI->ApplyCommand("/control/execute vis.mac");
       session->SessionStart();
       delete session;
+#endif
      
 #ifdef G4VIS_USE
       delete visManager;
@@ -92,9 +108,15 @@ int main(int argc,char** argv)
   // Free the store: user actions, physics_list and detector_description are
   //                 owned and deleted by the run manager, so they should not
   //                 be deleted in the main() program !
+#ifdef G4ANALYSIS_USE
+  delete analysisManager;
+#endif
 
   delete runManager;
   delete verbosity;
+#ifdef G4ANALYSIS_USE
+  delete aida;
+#endif
 
   return 0;
 }
