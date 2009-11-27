@@ -6,6 +6,7 @@
 #include "G4Trajectory.hh"
 #include "G4ios.hh"
 
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
  
 CustomEventAction::CustomEventAction(CustomAnalysisManager* aAnalysisManager) : fAnalysisManager(aAnalysisManager)
@@ -20,7 +21,7 @@ CustomEventAction::~CustomEventAction()
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
  
-void CustomEventAction::BeginOfEventAction(const G4Event*)
+void CustomEventAction::BeginOfEventAction(const G4Event* aEvent)
 {
 #ifdef G4ANALYSIS_USE
 	if(fAnalysisManager) fAnalysisManager->BeginOfEvent(aEvent);
@@ -30,13 +31,13 @@ void CustomEventAction::BeginOfEventAction(const G4Event*)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
  
-void CustomEventAction::EndOfEventAction(const G4Event* evt)
+void CustomEventAction::EndOfEventAction(const G4Event* aEvent)
 {
 
 #ifdef G4ANALYSIS_USE
   if(fAnalysisManager) fAnalysisManager->EndOfEvent(aEvent);
 #endif
-  G4int event_id = evt->GetEventID();
+  G4int event_id = aEvent->GetEventID();
   
   // get number of stored trajectories
   //
@@ -47,7 +48,7 @@ void CustomEventAction::EndOfEventAction(const G4Event* evt)
   // periodic printing
   //
   if (event_id < 100 || event_id%100 == 0) {
-    G4cout << ">>> Event " << evt->GetEventID() << G4endl;
+    G4cout << ">>> Event " << aEvent->GetEventID() << G4endl;
     //G4cout << "    " << n_trajectories
 	//   << " trajectories stored in this event." << G4endl;
   }

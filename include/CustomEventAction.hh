@@ -6,7 +6,8 @@
 class G4Event;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-class CustomAnalysisManager;
+//class CustomAnalysisManager;
+#include "CustomAnalysisManager.hh"
 
 class CustomEventAction : public G4UserEventAction
 {
