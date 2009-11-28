@@ -4,6 +4,17 @@
 
 #include "CustomRunAction.hh"
 
+#include "G4Run.hh"
+#include "G4RunManager.hh"
+
+#include "Randomize.hh"
+
+#ifdef G4ANALYSIS_USE
+#include "AIDA/AIDA.h"
+#endif
+
+#include "CustomRunAction.hh"
+
 /*CustomRunAction::CustomRunAction(
  CustomAnalysisManager* aAnalysisManager
 ):fAnalysisManager(aAnalysisManager){}*/
@@ -11,6 +22,9 @@
 CustomRunAction::CustomRunAction():af(0), tree(0)
 {
 	histo[0] = 0;
+	histo[1] = 0;
+	histo[3] = 0;
+	histo[4] = 0;
 
 #ifdef G4ANALYSIS_USE
 	af = AIDA_createAnalysisFactory();
@@ -20,9 +34,10 @@ CustomRunAction::CustomRunAction():af(0), tree(0)
 
 		G4bool readOnly = false;
 		G4bool createNew = true;
-		   G4String options =  "--noErrors export=root uncompress";
-		   //tree = tf->create("testem4.hbook","hbook",readOnly,createNew, options);
-		   tree = tf->create("testem4.root","root",readOnly,createNew, options);
+		G4cout << "creating tree and structure now!\n";
+		   G4String options =  "--noErrors export=XML uncompress";
+		   //tree = tf->create("custom.hbook","hbook",readOnly,createNew, options);
+		   tree = tf->create("testem4.XML","XML",readOnly,createNew, options);
 		   //tree = tf->create("testem4.XML" ,"XML" ,readOnly,createNew, options);
 		   delete tf;
 
@@ -49,6 +64,8 @@ CustomRunAction::CustomRunAction():af(0), tree(0)
 
 CustomRunAction::~CustomRunAction(){
 #ifdef G4ANALYSIS_USE
+	G4cout << "Writing tree file now...";
+
 	tree->commit();
 	tree->close();
 

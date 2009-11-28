@@ -6,7 +6,12 @@
 #include "G4TrajectoryContainer.hh"
 #include "G4Trajectory.hh"
 #include "G4ios.hh"
+#include "G4VVisManager.hh"
+#include "G4UnitsTable.hh"
 
+#ifdef G4ANALYSIS_USE
+  #include "AIDA/IHistogram1D.h"
+#endif
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
  
@@ -19,13 +24,13 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
  
-CustomEventAction::CustomEventAction(CustomRunAction* run)
-Run(run),drawFlag("none"),printModulo(10),eventMessenger(NULL)
+CustomEventAction::CustomEventAction(CustomRunAction* run):
+Run(run),drawFlag("none"),printModulo(10)
 {
 	// eventMessenger = new EventActionMessenger(this);
 
 }
-CustomEventACtion::~CustomEventAction()
+CustomEventAction::~CustomEventAction()
 {
 
 }
@@ -82,6 +87,22 @@ void CustomEventAction::EndOfEventAction(const G4Event* evt)
 	#ifdef G4ANALYSIS_USE
 		Run->GetHisto(1)->fill(TotalEnergyDeposit[1]/MeV);
 	#endif
+
+#ifndef G4VIS_NONE
+		if(G4VVisManager::GetConcreteInstance())
+		  {
+		   G4TrajectoryContainer* trajectoryContainer = evt->GetTrajectoryContainer();
+		   G4int n_trajectories = 0;
+		   if (trajectoryContainer) n_trajectories = trajectoryContainer->entries();
+		   for(G4int i=0; i<n_trajectories; i++)
+		      { G4Trajectory* trj = (G4Trajectory *)
+		                                      ((*(evt->GetTrajectoryContainer()))[i]);
+		        if (drawFlag == "all") trj->DrawTrajectory(1000);
+		        else if ((drawFlag == "charged")&&(trj->GetCharge() != 0.))
+		                               trj->DrawTrajectory(1000);
+		      }
+		  }
+#endif
 
 }
 

@@ -30,6 +30,9 @@ int main(int argc,char** argv)
   G4VSteppingVerbose* verbosity = new CustomSteppingVerbose;
   G4VSteppingVerbose::SetInstance(verbosity);
   
+  //choose the Random engine
+  CLHEP::HepRandom::setTheEngine(new CLHEP::RanecuEngine);
+
   // Run manager
   //
   G4RunManager * runManager = new G4RunManager;
@@ -50,16 +53,17 @@ int main(int argc,char** argv)
 
   //
   CustomAnalysisManager * analysisManager = 0;
-  #ifdef G4ANALYSIS_USE
+  /*#ifdef G4ANALYSIS_USE
     AIDA::IAnalysisFactory* aida = AIDA_createAnalysisFactory();
     analysisManager = new CustomAnalysisManager(aida);
-  #endif
-  G4UserEventAction* event_action = new CustomEventAction(analysisManager);
+  #endif*/
+  G4UserRunAction* run_action = new CustomRunAction;
+  runManager->SetUserAction(run_action);
+  G4UserEventAction* event_action = new CustomEventAction((CustomRunAction*)run_action);
   runManager->SetUserAction(event_action);
-  G4UserRunAction* run_action = new CustomRunAction(analysisManager);
-    runManager->SetUserAction(run_action);
+
   //
-  G4UserSteppingAction* stepping_action = new CustomSteppingAction;
+  G4UserSteppingAction* stepping_action = new CustomSteppingAction((CustomEventAction*)event_action);
   runManager->SetUserAction(stepping_action);
 
 
@@ -88,14 +92,12 @@ int main(int argc,char** argv)
       G4VisManager* visManager = new G4VisExecutive;
       visManager->Initialize();
       G4UIsession * session = 0;
-#endif    
+#endif
      
 
-#ifdef G4UI_USE_TCSH
+#ifdef G4VIS_USE
       //session = new G4UIterminal(new G4UItcsh);
       session = new G4UIterminal();
-#endif
-#ifdef G4VIS_USE
       UI->ApplyCommand("/control/execute vis.mac");
       session->SessionStart();
       delete session;
@@ -109,16 +111,10 @@ int main(int argc,char** argv)
   // Free the store: user actions, physics_list and detector_description are
   //                 owned and deleted by the run manager, so they should not
   //                 be deleted in the main() program !
-#ifdef G4ANALYSIS_USE
-  delete analysisManager;
-#endif
 
   delete runManager;
   delete verbosity;
-#ifdef G4ANALYSIS_USE
-  delete aida;
-#endif
-
+  //delete run_action;
   return 0;
 }
 

@@ -1,15 +1,16 @@
 #include "CustomSteppingAction.hh"
-#include "EventAction.hh"
+#include "CustomEventAction.hh"
 #include "G4SteppingManager.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-CustomSteppingAction::CustomSteppingAction()
+CustomSteppingAction::CustomSteppingAction(CustomEventAction* evAct) : eventAction(evAct),myVerbose(NULL)
 { }
+
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void CustomSteppingAction::UserSteppingAction(const G4Step*)
+void CustomSteppingAction::UserSteppingAction(const G4Step* aStep)
 { 
 	G4double EdepStep = aStep->GetTotalEnergyDeposit();
 

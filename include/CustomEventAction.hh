@@ -2,7 +2,7 @@
 #define CustomEventAction_h 1
 
 #include "G4UserEventAction.hh"
-
+#include "globals.hh"
 class G4Event;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -17,22 +17,24 @@ namespace AIDA  {
 	class IHistogram1D;
 }
 
+class CustomRunAction;
+
 class CustomEventAction : public G4UserEventAction
 {
   public:
     //CustomEventAction(CustomAnalysisManager* = 0);
 
-	CustomEventAction(RunAction*)
-   ~CustomEventAction();
+	CustomEventAction(CustomRunAction* );
+    ~CustomEventAction();
 
   public:
     void BeginOfEventAction(const G4Event*);
     void EndOfEventAction(const G4Event*);
 
-    void addEdep(G4double Edep, G4int index)     {TotalEnergyDeposit[index] += Edep;};
-    G4double GetEnergyDeposit(G4int index)     {return TotalEnergyDeposit[index];};
-    void SetDrawFlag(G4String val)  {drawFlag = val;};
-    void SetPrintModulo(G4int val)  {printModulo = val;};
+    void addEdep(G4double Edep, G4int index)     {TotalEnergyDeposit[index] += Edep;}
+    G4double GetEnergyDeposit(G4int index)     {return TotalEnergyDeposit[index];}
+    void SetDrawFlag(G4String val)  {drawFlag = val;}
+    void SetPrintModulo(G4int val)  {printModulo = val;}
 
   private:
     CustomAnalysisManager* fAnalysisManager;
