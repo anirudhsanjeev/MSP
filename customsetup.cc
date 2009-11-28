@@ -47,22 +47,23 @@ int main(int argc,char** argv)
   G4VUserPrimaryGeneratorAction* gen_action = new CustomPrimaryGeneratorAction(detector);
   runManager->SetUserAction(gen_action);
   //
-  G4UserRunAction* run_action = new CustomRunAction;
-  runManager->SetUserAction(run_action);
+
   //
-  G4UserEventAction* event_action = new CustomEventAction;
+  CustomAnalysisManager * analysisManager = 0;
+  #ifdef G4ANALYSIS_USE
+    AIDA::IAnalysisFactory* aida = AIDA_createAnalysisFactory();
+    analysisManager = new CustomAnalysisManager(aida);
+  #endif
+  G4UserEventAction* event_action = new CustomEventAction(analysisManager);
   runManager->SetUserAction(event_action);
+  G4UserRunAction* run_action = new CustomRunAction(analysisManager);
+    runManager->SetUserAction(run_action);
   //
   G4UserSteppingAction* stepping_action = new CustomSteppingAction;
   runManager->SetUserAction(stepping_action);
 
 
 
-#ifdef G4ANALYSIS_USE
-  CustomAnalysisManager * analysisManager = 0;
-  AIDA::IAnalysisFactory* aida = AIDA_createAnalysisFactory();
-  analysisManager = new CustomAnalysisManager(aida);
-#endif
 
 
   // Initialize G4 kernel
@@ -82,7 +83,7 @@ int main(int argc,char** argv)
     }
     
   else           // interactive mode : define visualization and UI terminal
-    { 
+    {
 #ifdef G4VIS_USE
       G4VisManager* visManager = new G4VisExecutive;
       visManager->Initialize();

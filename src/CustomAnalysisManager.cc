@@ -34,6 +34,7 @@ CustomAnalysisManager::CustomAnalysisManager(AIDA::IAnalysisFactory* aAIDA)
 ,fLGap(0)
 ,fTuple(0)
 {
+	G4cout << "creating an analysis manager!";
   // Could fail if no AIDA implementation found :
   if(!fAIDA) {
     G4cout << "AIDA analysis factory not found." << G4endl;
@@ -73,6 +74,7 @@ CustomAnalysisManager::CustomAnalysisManager(AIDA::IAnalysisFactory* aAIDA)
 
   fTree->cd("..");
   fTree->mkdir("tuples");
+
   fTree->cd("tuples");
 
   // Get a tuple factory :
@@ -106,23 +108,28 @@ void CustomAnalysisManager::EndOfRun(const G4Run*){
 
 void CustomAnalysisManager::BeginOfEvent(const G4Event*){
   if(fCalorimeterCollID==-1) {
+	  G4cout << "Recording event";
     G4SDManager* SDman = G4SDManager::GetSDMpointer();
     fCalorimeterCollID = SDman->GetCollectionID("CalCollection");
   }
 }
 
 void CustomAnalysisManager::EndOfEvent(const G4Event* aEvent){
-  if(!fEAbs) return; // No histo booked !
+	G4cout<<"Event flag A \n";
+	if(!fEAbs) return; // No histo booked !
   if(!fTuple) return; // No tuple booked !
-
+  G4cout<<"Event flag B \n";
   //G4int evtNb = aEvent->GetEventID();
 
   G4HCofThisEvent* HCE = aEvent->GetHCofThisEvent();
   CustomCalorHitsCollection* CHC =
     HCE ? (CustomCalorHitsCollection*)(HCE->GetHC(fCalorimeterCollID)) : 0;
+  G4cout<<"Event flag C \n";
 
   if(CHC) {
+
     G4int n_hit = CHC->entries();
+    G4cout<<"Event flag D . Entries = " << n_hit << "\n";
     for (G4int i=0;i<n_hit;i++) {
       G4double EAbs = (*CHC)[i]->GetEdepAbs();
       G4double LAbs = (*CHC)[i]->GetTrakAbs();

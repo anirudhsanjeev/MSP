@@ -1,0 +1,13 @@
+/gps/centre 0 0 0
+/gps/particle gamma
+
+/gps/pos/shape Sphere
+/gps/pos/centre 2. 2. 2.
+/gps/pos/radius 3
+/gps/ang/type planar
+/gps/ene/type Gauss
+
+/gps/source/list
+/tracking/verbose 0
+
+/run/beamOn 50

@@ -40,6 +40,9 @@ class CustomDetectorConstruction : public G4VUserDetectorConstruction
      void SetMaxStep (G4double);
      void PrintCalorimeters();
      
+     G4int GetDetectorCubeID(G4VPhysicalVolume*);
+
+
   private:
 
      G4Box*             solidWorld;    // pointer to the solid envelope 
@@ -58,6 +61,8 @@ class CustomDetectorConstruction : public G4VUserDetectorConstruction
      G4LogicalVolume*   logicChamber;  // pointer to the logical Chamber
      G4VPhysicalVolume* physiChamber;  // pointer to the physical Chamber
      
+     G4VPhysicalVolume* detector_Phys[4];
+
      G4Material*         TargetMater;  // pointer to the target  material
      G4Material*         ChamberMater; // pointer to the chamber material
 

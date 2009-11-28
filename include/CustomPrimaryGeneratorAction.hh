@@ -6,6 +6,7 @@
 class CustomDetectorConstruction;
 class G4ParticleGun;
 class G4Event;
+#include "G4GeneralParticleSource.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
  
@@ -19,7 +20,7 @@ class CustomPrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
     void GeneratePrimaries(G4Event*);
 
   private:
-    G4ParticleGun* particleGun;
+    G4GeneralParticleSource* particleGun;
     CustomDetectorConstruction* myDetector;
 };
 

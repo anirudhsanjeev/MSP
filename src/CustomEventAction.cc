@@ -23,8 +23,13 @@ CustomEventAction::~CustomEventAction()
  
 void CustomEventAction::BeginOfEventAction(const G4Event* aEvent)
 {
+	//G4cout << "Begin of event action \n";
 #ifdef G4ANALYSIS_USE
-	if(fAnalysisManager) fAnalysisManager->BeginOfEvent(aEvent);
+	//G4cout << "Analysis loop \n";
+	if(fAnalysisManager){
+		//G4cout << "Executing an event" << G4endl;
+		fAnalysisManager->BeginOfEvent(aEvent);
+	}
 #endif
 
 }

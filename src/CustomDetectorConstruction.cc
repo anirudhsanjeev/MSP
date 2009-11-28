@@ -86,7 +86,7 @@ G4VPhysicalVolume* CustomDetectorConstruction::Construct()
     G4LogicalVolume *emitter_Log = new G4LogicalVolume(detector_Box, Pb, "emitter_Log");
 
     // Make an array of 4 detectors
-    G4VPhysicalVolume* detector_Phys[4];
+
     detector_Phys[0] = new G4PVPlacement(0,
             G4ThreeVector(4.5*cm, 4.5*cm, 0), // Placed at the appropriate location
             emitter_Log, // 3cm cube
@@ -194,4 +194,21 @@ void CustomDetectorConstruction::SetMaxStep(G4double maxStep)
 void CustomDetectorConstruction::PrintCalorimeters()
 {
 
+}
+
+G4int CustomDetectorConstruction::GetDetectorCubeID(G4VPhysicalVolume *target)
+{
+	// Get the cube id from the physical volume
+
+	for(int i = 0; i < 4; i++) //TODO: make more flexible
+	{
+		if(detector_Phys[i] == target)
+		{
+			G4cout << "Registered a positive impact in "<< i << "\n";
+			return i+1;
+		}
+	}
+
+	// failure
+	return 0;
 }
