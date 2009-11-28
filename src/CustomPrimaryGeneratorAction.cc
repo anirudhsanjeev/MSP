@@ -24,6 +24,8 @@ CustomPrimaryGeneratorAction::CustomPrimaryGeneratorAction(
   particleGun->SetParticleDefinition(particle);
   particleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,1.));
   particleGun->SetParticleEnergy(3.0*GeV);
+
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -37,8 +39,8 @@ CustomPrimaryGeneratorAction::~CustomPrimaryGeneratorAction()
 
 void CustomPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 { 
-  G4double position = -0.5*(myDetector->GetWorldFullLength());
-  particleGun->SetParticlePosition(G4ThreeVector(0.*cm,0.*cm,position));
+  //G4double position = -0.5*(myDetector->GetWorldFullLength());
+  particleGun->SetParticlePosition(G4ThreeVector(0.*cm,0.*cm,0.*cm));
   
   particleGun->GeneratePrimaryVertex(anEvent);
 }
