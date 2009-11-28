@@ -94,13 +94,13 @@ G4VPhysicalVolume* CustomDetectorConstruction::Construct()
             experiment_Log, // The mother volume.
             false, // no boolean operations
             0); // Copy number
-    detector_Phys[0] = new G4PVPlacement(0,
+    /*detector_Phys[0] = new G4PVPlacement(0,
             G4ThreeVector(4.5*cm, 4.5*cm, 0), // Placed at the appropriate location
             detector_Log, // 3cm cube
             "detector_Phys_0", // Name
             experiment_Log, // The mother volume.
             false, // no boolean operations
-            0); // Copy number
+            0); // Copy number*/
     detector_Phys[1] = new G4PVPlacement(0,
             G4ThreeVector(-4.5*cm, 4.5*cm, 0), // Placed at the appropriate location
             detector_Log, // 3cm cube
