@@ -57,13 +57,18 @@ int main(int argc,char** argv)
     AIDA::IAnalysisFactory* aida = AIDA_createAnalysisFactory();
     analysisManager = new CustomAnalysisManager(aida);
   #endif*/
-  G4UserRunAction* run_action = new CustomRunAction;
+  CustomRunAction* run_action = new CustomRunAction;
+  // set the detector so that the number of dets can be found
+  run_action->theDetector = detector;
+  detector->runAction = run_action;
+
+
   runManager->SetUserAction(run_action);
-  G4UserEventAction* event_action = new CustomEventAction((CustomRunAction*)run_action);
+  G4UserEventAction* event_action = new CustomEventAction(run_action);
   runManager->SetUserAction(event_action);
 
   //
-  G4UserSteppingAction* stepping_action = new CustomSteppingAction((CustomEventAction*)event_action);
+  G4UserSteppingAction* stepping_action = new CustomSteppingAction((CustomEventAction*)event_action, (CustomDetectorConstruction*)detector);
   runManager->SetUserAction(stepping_action);
 
 

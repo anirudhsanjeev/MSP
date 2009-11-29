@@ -13,19 +13,9 @@
   #include "AIDA/IHistogram1D.h"
 #endif
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
- 
-/*CustomEventAction::CustomEventAction(CustomAnalysisManager* aAnalysisManager) : fAnalysisManager(aAnalysisManager)
-{
-
-}//*/
-
-
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
  
 CustomEventAction::CustomEventAction(CustomRunAction* run):
-Run(run),drawFlag("none"),printModulo(10)
+Run(run),drawFlag("all"),printModulo(10)
 {
 	// eventMessenger = new EventActionMessenger(this);
 
@@ -34,9 +24,8 @@ CustomEventAction::~CustomEventAction()
 {
 
 }
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
  
-void CustomEventAction::BeginOfEventAction(const G4Event* aEvent)
+void CustomEventAction::BeginOfEventAction(const G4Event* evt)
 {
 /*	//G4cout << "Begin of event action \n";
 #ifdef G4ANALYSIS_USE
@@ -46,13 +35,16 @@ void CustomEventAction::BeginOfEventAction(const G4Event* aEvent)
 		fAnalysisManager->BeginOfEvent(aEvent);
 	}
 #endif //*/
+	G4int evtNb = evt->GetEventID();
+	G4cout << "\n---> Begin of Event: " << evtNb << G4endl;
 
-
+	for(int i = 0; i<100; i++) // 100 detectors have to be enough for anyone
+	{
+		TotalEnergyDeposit[i] = 0;
+	}
 
 }
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
- 
 void CustomEventAction::EndOfEventAction(const G4Event* evt)
 {
 
@@ -85,12 +77,16 @@ void CustomEventAction::EndOfEventAction(const G4Event* evt)
 	}
 
 	#ifdef G4ANALYSIS_USE
-		Run->GetHisto(1)->fill(TotalEnergyDeposit[1]/MeV);
+	for(int i = 0; i < Run->nDetectors; i ++)
+	{
+		Run->GetHisto(i)->fill(TotalEnergyDeposit[i]/MeV);
+	}
 	#endif
 
 #ifndef G4VIS_NONE
 		if(G4VVisManager::GetConcreteInstance())
 		  {
+			G4cout <<"Drawing a trajectory now!" << G4endl;
 		   G4TrajectoryContainer* trajectoryContainer = evt->GetTrajectoryContainer();
 		   G4int n_trajectories = 0;
 		   if (trajectoryContainer) n_trajectories = trajectoryContainer->entries();

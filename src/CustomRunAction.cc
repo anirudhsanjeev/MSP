@@ -21,10 +21,12 @@
 
 CustomRunAction::CustomRunAction():af(0), tree(0)
 {
-	histo[0] = 0;
-	histo[1] = 0;
-	histo[3] = 0;
-	histo[4] = 0;
+
+	nDetectors = 0;
+	for(int j = 0; j< 100;j++)
+	{
+		histo[j] = 0;
+	}
 
 #ifdef G4ANALYSIS_USE
 	af = AIDA_createAnalysisFactory();
@@ -35,9 +37,9 @@ CustomRunAction::CustomRunAction():af(0), tree(0)
 		G4bool readOnly = false;
 		G4bool createNew = true;
 		G4cout << "creating tree and structure now!\n";
-		   G4String options =  "--noErrors export=XML uncompress";
+		   G4String options =  "--noErrors export=root uncompress";
 		   //tree = tf->create("custom.hbook","hbook",readOnly,createNew, options);
-		   tree = tf->create("testem4.XML","XML",readOnly,createNew, options);
+		   tree = tf->create("custom.root","root",readOnly,createNew, options);
 		   //tree = tf->create("testem4.XML" ,"XML" ,readOnly,createNew, options);
 		   delete tf;
 
@@ -45,7 +47,7 @@ CustomRunAction::CustomRunAction():af(0), tree(0)
 		     // Creating a histogram factory
 		     AIDA::IHistogramFactory* hf = af->createHistogramFactory(*tree);
 
-		     // Creating the histogram
+		     /*// Creating the histogram
 		     histo[0]=hf->createHistogram1D
 		                         ("1","total energy deposit in D1",100,0.,10.);
 		     histo[1]=hf->createHistogram1D
@@ -53,9 +55,22 @@ CustomRunAction::CustomRunAction():af(0), tree(0)
 		     histo[2]=hf->createHistogram1D
 		     		                         ("3","total energy deposit in D3",100,0.,10.);
 		     histo[3]=hf->createHistogram1D
-		     		                         ("4","total energy deposit in D4",100,0.,10.);
+		     		                         ("4","total energy deposit in D4",100,0.,10.);*/
 
-		     delete hf;
+		     /*for(int i = 0; i < theDetector->nDetectors; i++)
+		     {
+		    	 char *indexString = new char[3];
+		    	 sprintf(indexString, "%d", i);
+
+		    	 char *descString = new char[50];
+		    	 sprintf(descString, "Energy deposited in detector number %d", i);
+		    	 histo[i] = hf->createHistogram1D
+		    			 (indexString,
+		    					 descString,
+		    					 100,0.,10.);
+		     }*/
+
+		     //delete hf;
 		     G4cout << "\n----> Histogram tree is opened" << G4endl;
 		}
 	}
@@ -71,6 +86,7 @@ CustomRunAction::~CustomRunAction(){
 
 	delete tree;
 	delete af;
+	delete hf;
 #endif
 }
 
@@ -98,4 +114,23 @@ void CustomRunAction::EndOfRunAction(const G4Run* aRun){
 	  fAnalysisManager->EndOfRun(aRun);
 	  }
 #endif*/
+}
+
+void CustomRunAction::RegisterNewDetector(G4int detectorID)
+{
+#ifdef G4ANALYSIS_USE
+	int i = detectorID;
+	// set the appropriate number of detectors
+	nDetectors = theDetector->nDetectors;
+	char *indexString = new char[3];
+	sprintf(indexString, "%d", i);
+
+		char *descString = new char[50];
+	sprintf(descString, "Energy deposited in detector number %d", i);
+	histo[i] = hf->createHistogram1D
+	(indexString,
+			descString,
+			100,0.,10.);
+#endif
+
 }

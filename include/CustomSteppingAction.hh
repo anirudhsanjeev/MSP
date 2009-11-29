@@ -2,7 +2,7 @@
 #define CustomSteppingAction_h 1
 
 #include "G4UserSteppingAction.hh"
-
+#include "CustomDetectorConstruction.hh"
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 class CustomEventAction;
 class G4SteppingVerbose2;
@@ -11,7 +11,7 @@ class G4SteppingVerbose2;
 class CustomSteppingAction : public G4UserSteppingAction
 {
   public:
-    CustomSteppingAction(CustomEventAction*);
+    CustomSteppingAction(CustomEventAction*, CustomDetectorConstruction*);
    ~CustomSteppingAction(){};
 
     void UserSteppingAction(const G4Step*);
@@ -19,6 +19,7 @@ class CustomSteppingAction : public G4UserSteppingAction
   private:
       CustomEventAction* eventAction;
       G4SteppingVerbose2* myVerbose;
+      CustomDetectorConstruction* detector;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

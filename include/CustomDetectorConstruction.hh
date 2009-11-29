@@ -13,6 +13,8 @@ class G4VPVParameterisation;
 class G4UserLimits;
 class CustomDetectorMessenger;
 class CustomCalorimeterDetector;
+class CustomRunAction;
+
 
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -42,8 +44,25 @@ class CustomDetectorConstruction : public G4VUserDetectorConstruction
      
      G4int GetDetectorCubeID(G4VPhysicalVolume*);
 
+     void SetCubeSize(G4double);
+     void AddCubeAt(G4ThreeVector);
+
+     CustomRunAction *runAction;
+     G4int nDetectors;
 
   private:
+
+     // Experiment box variables
+     G4Box* experiment_Box;
+     G4LogicalVolume* experiment_Log;
+     G4VPhysicalVolume* experiment_Phys;
+
+     G4Box* detector_Box;
+     G4LogicalVolume *detector_Log;
+     G4LogicalVolume *emitter_Log;
+     G4VPhysicalVolume* emitter_Phys;
+
+     G4Material* Pb;
 
      G4Box*             solidWorld;    // pointer to the solid envelope 
      G4LogicalVolume*   logicWorld;    // pointer to the logical envelope
@@ -81,6 +100,8 @@ class CustomDetectorConstruction : public G4VUserDetectorConstruction
      G4int    NbOfChambers;            // Nb of chambers in the tracker region
      G4double ChamberWidth;            // width of the chambers
      G4double ChamberSpacing;	       // distance between chambers
+
+
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
