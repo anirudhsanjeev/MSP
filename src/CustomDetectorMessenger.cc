@@ -93,7 +93,13 @@ void CustomDetectorMessenger::SetNewValue(G4UIcommand* command,G4String newValue
 	}
 	if(command == CubeAtCmd)
 	{
-		myDetector->AddCubeAt(CubeAtCmd->GetNew3VectorValue(newValue));
+		G4cout << "Processing a command to add a cube \n";
+
+		G4ThreeVector cubeAt = CubeAtCmd->GetNew3VectorValue(newValue);
+		G4cout << cubeAt.x() << cubeAt.y() << cubeAt.z() << G4endl;
+
+
+		myDetector->AddCubeAt(cubeAt);
 	}
 
 }

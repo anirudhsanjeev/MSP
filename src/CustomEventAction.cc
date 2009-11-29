@@ -15,7 +15,7 @@
 
  
 CustomEventAction::CustomEventAction(CustomRunAction* run):
-Run(run),drawFlag("all"),printModulo(10)
+Run(run),drawFlag("all"),printModulo(1000)
 {
 	// eventMessenger = new EventActionMessenger(this);
 
@@ -35,8 +35,12 @@ void CustomEventAction::BeginOfEventAction(const G4Event* evt)
 		fAnalysisManager->BeginOfEvent(aEvent);
 	}
 #endif //*/
-	G4int evtNb = evt->GetEventID();
-	G4cout << "\n---> Begin of Event: " << evtNb << G4endl;
+	G4int eventID = evt->GetEventID();
+
+	if(!(eventID % printModulo))
+		{
+		G4cout << "\n---> Begin of Event: " << eventID << G4endl;
+		}
 
 	for(int i = 0; i<100; i++) // 100 detectors have to be enough for anyone
 	{
@@ -68,18 +72,29 @@ void CustomEventAction::EndOfEventAction(const G4Event* evt)
   }//*/
 
 	G4int eventID = evt->GetEventID();
+	if(eventID != 0)
+	{
 
 	if(!(eventID % printModulo))
 	{
+		G4cout << "-------->Event ID - " << eventID << G4endl;
+		for(int i = 0; i < Run->nDetectors; i++)
+		{
 
-		G4cout << "Event ID - " << eventID << "   Energy deposit: "
-		           << G4BestUnit(TotalEnergyDeposit[1],"Energy") << G4endl;
+		G4cout << "Detector no. " << i << "  |  Energy deposit: "
+		           << TotalEnergyDeposit[i] << "KeV" << G4endl;
+		}
 	}
 
 	#ifdef G4ANALYSIS_USE
 	for(int i = 0; i < Run->nDetectors; i ++)
 	{
-		Run->GetHisto(i)->fill(TotalEnergyDeposit[i]/MeV);
+		// G4cout << "Filling energy of hist " << i << " with " << TotalEnergyDeposit[i] << endl;
+		G4double energyThreshold = 0.0;
+		if(TotalEnergyDeposit[i] > energyThreshold)
+		{
+			Run->GetHisto(i)->fill(TotalEnergyDeposit[i]/MeV);
+		}
 	}
 	#endif
 
@@ -99,6 +114,7 @@ void CustomEventAction::EndOfEventAction(const G4Event* evt)
 		      }
 		  }
 #endif
+	}
 
 }
 

@@ -1,12 +1,27 @@
 /gps/particle gamma
+/gps/number 30
+/gps/energy 4 MeV
+/gps/pos/type Volume
+/gps/pos/shape Para
+/gps/pos/centre 4.5 4.5 0.0 cm
+/gps/pos/halfx 1.5 cm
+/gps/pos/halfy 1.5 cm
+/gps/pos/halfz 1.5 cm
 
-/gps/pos/shape Sphere
-/gps/pos/centre 2. 2. 2.
-/gps/pos/radius 3
-/gps/ang/type planar
-/gps/ene/type Gauss
+
+#/gps/pos/radius 1.5 cm
+
+/gps/ang/type iso
+
+
+/custom/det/cubeSize 3.0 cm
+/custom/det/cubeAt -4.5 4.5 0. cm
+/custom/det/cubeAt -4.5 -4.5 0. cm
+/custom/det/cubeAt 4.5 -4.5 0. cm
 
 /gps/source/list
 /tracking/verbose 0
 
-/run/beamOn 50
+
+/run/beamOn 10000
+

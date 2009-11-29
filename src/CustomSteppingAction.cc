@@ -23,14 +23,15 @@ void CustomSteppingAction::UserSteppingAction(const G4Step* aStep)
 
 	if(cubeID > 0 && EdepStep == 0.)
 	{
-		G4cout <<"Something's wrong. cubeID>0 but EdepStep is zero\n";
+		//G4cout <<"Something's wrong. cubeID>0 but EdepStep is zero\n";
 	}
 	if(cubeID == 0 && EdepStep > 0.)
 	{
-		G4cout <<"Something's wrong. cubeID==0 but EdepStep is >0\n";
+		//G4cout <<"Something's wrong. cubeID==0 but EdepStep is >0\n";
 	}
 	if(cubeID > 0 && EdepStep > 0)
 	{
+        //G4cout << "Adding energy of " << EdepStep << " to detector " << cubeID -1 << G4endl;
 		eventAction->addEdep(EdepStep, cubeID - 1);
 	}
 

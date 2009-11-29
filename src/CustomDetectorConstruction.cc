@@ -38,6 +38,7 @@ CustomDetectorConstruction::CustomDetectorConstruction()
 {
   fpMagField = new CustomMagneticField();
   detectorMessenger = new CustomDetectorMessenger(this);
+  nDetectors=0;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -208,8 +209,8 @@ void CustomDetectorConstruction::SetCubeSize(G4double size)
 
 void CustomDetectorConstruction::AddCubeAt(G4ThreeVector position)
 {
-	//G4cout << "Adding a cube at - ";
-	char detectorName[20];
+	G4cout << "Adding a cube at - " << position.x() << position.y() << position.z();
+	char detectorName[50];
 	sprintf(detectorName, "detector_Phys_%d", nDetectors);
 	detector_Phys[nDetectors] = new G4PVPlacement(0,
 	            position, // Placed at the appropriate location
@@ -217,7 +218,7 @@ void CustomDetectorConstruction::AddCubeAt(G4ThreeVector position)
 	            detectorName, // Name
 	            experiment_Log, // The mother volume.
 	            false, // no boolean operations
-	            0); // Copy number
+	            0); // Copy number*/
 
 	nDetectors ++;
 
@@ -242,7 +243,7 @@ G4int CustomDetectorConstruction::GetDetectorCubeID(G4VPhysicalVolume *target)
 	{
 		if(detector_Phys[i] == target)
 		{
-			G4cout << "Registered a positive impact in "<< i << "\n";
+			//G4cout << "Registered a positive impact in "<< i << "\n";
 			return i+1;
 		}
 	}

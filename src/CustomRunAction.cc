@@ -45,7 +45,7 @@ CustomRunAction::CustomRunAction():af(0), tree(0)
 
 		   if (tree) {
 		     // Creating a histogram factory
-		     AIDA::IHistogramFactory* hf = af->createHistogramFactory(*tree);
+		     hf = af->createHistogramFactory(*tree);
 
 		     /*// Creating the histogram
 		     histo[0]=hf->createHistogram1D
@@ -119,18 +119,25 @@ void CustomRunAction::EndOfRunAction(const G4Run* aRun){
 void CustomRunAction::RegisterNewDetector(G4int detectorID)
 {
 #ifdef G4ANALYSIS_USE
+	int flagId = 0;
+	G4cout << "Detector id: " << detectorID << G4endl;
+
 	int i = detectorID;
 	// set the appropriate number of detectors
 	nDetectors = theDetector->nDetectors;
+
 	char *indexString = new char[3];
+
 	sprintf(indexString, "%d", i);
+
 
 		char *descString = new char[50];
 	sprintf(descString, "Energy deposited in detector number %d", i);
+
 	histo[i] = hf->createHistogram1D
-	(indexString,
-			descString,
-			100,0.,10.);
+	(indexString, descString,
+			50,0.,5.);
+
 #endif
 
 }
